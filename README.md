@@ -72,7 +72,7 @@ While you have a lot of control over the image generation via the callback mecha
 await imageserver.start({customViewerDirectory:"E:/myviewer"});
 ```
 
-The image server expects a file called imageserver.html to be accesible in the top level viewer folder which is a slightly modified version of "hoops_web_viewer_sample.html" with the UI removed and a few callbacks added. See below for the relevant code changes. If you just want to upgrade the version of HOOPS Communicator, all you need to do is copy the imageserver.html file from the public folder of this module into your viewer folder. It will likely work with later versions of HOOPS Communicator. If not simply include the code below to "hoops_web_viewer_sample.html"
+The image server expects a file called imageserver.html to be accesible in the top level viewer folder which is a slightly modified version of "hoops_web_viewer_sample.html" with the UI removed and a few callbacks added. See below for the relevant code changes. If you just want to upgrade the version of HOOPS Communicator, all you need to do is copy the imageserver.html file from the public folder of this module into your viewer folder. It will likely work with later versions of HOOPS Communicator. If not, simply include the code below in "hoops_web_viewer_sample.html"
 
 ```
 
@@ -101,6 +101,6 @@ window.onload = function () {
 
 
 
-## Communicator Version
-This version of the HC Image Server is using **HOOPS Communicator 2022 SP1 U2**. It will not work with scs files generated with newer versions of HOOPS Communicator.
+## HOOPS Communicator Version
+This version of the HC Image Server is using **HOOPS Communicator 2022 SP1 U2**. It will likely not work with scs files generated with newer versions of HOOPS Communicator unless you provide a custom viewer directory (see above).
 
