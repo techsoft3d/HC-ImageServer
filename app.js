@@ -34,9 +34,16 @@ exports.start = async function (inport) {
 
 exports.generateImage = async function (scspath,params) {  
 
-    let data = fs.readFileSync(scspath);
+    let data;
+    if (params && params.imageData) {
+        data = params.imageData;
+    }
+    else {
+        data = fs.readFileSync(scspath);
+    }
+    
     var uv4 = uuidv4();
-    fs.writeFileSync("./public/models/" + uv4 + '.scs', data);
+    fs.writeFileSync(path.join(__dirname,"./public/models/" + uv4 + '.scs'), data);
     
     const page = await browser.newPage();
     let modelStructureReadyCalled = false;
@@ -57,13 +64,13 @@ exports.generateImage = async function (scspath,params) {
 
         if (lastframetime > 1000) {
             clearInterval(myInterval);
-            await page.screenshot({ path: './screenshots/' + uv4 + '.png' });
-            let data = fs.readFileSync('./screenshots/' + uv4 + '.png');  
+            await page.screenshot({ path: path.join(__dirname,'./screenshots/' + uv4 + '.png') });
+            let data = fs.readFileSync(path.join(__dirname,'./screenshots/' + uv4 + '.png'));  
             if (params && params.outputPath) {
                 fs.writeFileSync(params.outputPath, data);
             }
-            del("./public/models/" + uv4 + '.scs',{force: true});
-            del('./screenshots/' + uv4 + '.png',{force: true});
+            del(path.join(__dirname,"./public/models/" + uv4 + '.scs'),{force: true});
+            del(path.join(__dirname,'./screenshots/' + uv4 + '.png'),{force: true});
             return data;
         }
     }, 100);
@@ -72,28 +79,3 @@ exports.generateImage = async function (scspath,params) {
 exports.shutdown = async function () {
     await browser.close();
 };
-
-
-
-// function myCallback()
-// {
-//     hwv.view.setBackgroundColor(new Communicator.Color(0,0,0));
-// }
-
-
-
-// function myCallback2()
-// {
-//     hwv.view.isolateNodes([446]);
-// }
-
-
-// (async () => {
-//     await this.start();
-//     this.generateImage("E:/communicator/HOOPS_Communicator_2022_SP1_U2/quick_start/converted_models/user/scs_models/DamagedHelmet.scs", {outputPath:"./damagedhelmet.png",callback:myCallback});
-//     this.generateImage("E:/communicator/HOOPS_Communicator_2022_SP1_U2/quick_start/converted_models/user/scs_models/wooden 3d printer (1).scs",{outputPath:"./printer.png",callback:myCallback2});
-//     this.generateImage("E:/communicator/HOOPS_Communicator_2022_SP1_U2/quick_start/converted_models/user/scs_models/railroadcar.scs");
-//     this.generateImage("E:/communicator/HOOPS_Communicator_2022_SP1_U2/quick_start/converted_models/user/scs_models/aw_Dives in Misericordia_2D.scs");
-
-
-// })();
