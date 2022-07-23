@@ -26,8 +26,6 @@
     ></script>
     <script type="text/javascript" src="js/sample.js?v=ab8e5f4"></script>
 
-    <script type="text/javascript" src="js/app/startup.js"></script>
-
     <link rel="stylesheet" href="css/TreeControl.css" type="text/css" />
     <link rel="stylesheet" href="css/Toolbar.css" type="text/css" />
     <link rel="stylesheet" href="css/Common.css" type="text/css" />
@@ -44,6 +42,19 @@
       var hwv = null;
       var ui = null;
       var md = new MobileDetect(window.navigator.userAgent);
+
+
+      var currentFrameDrawn = new Date();
+      var modelStructureReady = false;
+
+      function frameDrawn() {
+        currentFrameDrawn = new Date();
+      }
+
+      function msready() {
+        modelStructureReady = true;
+      }
+
 
       window.onload = function () {
         Sample.createViewer().then(
@@ -68,7 +79,7 @@
               showToolbar: true,
             };
 
-         //   ui = new Communicator.Ui.Desktop.DesktopUi(hwv, uiConfig);
+         //ui = new Communicator.Ui.Desktop.DesktopUi(hwv, uiConfig);
 
                   
           hwv.setCallbacks({
