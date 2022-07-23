@@ -61,11 +61,12 @@ The default implementation of the Image Server uses is own express http server t
 3. Provide the server url and directory to place the scz files when starting the image server (see example below when running the HOOPS Communicator server directly from the installation.)
 
 ```
-await imageserver.start({customServer: "http://localhost:11180/imageserver.html?viewer=csr&", sczDirectory:"E:/communicator/HOOPS_Communicator_2022_SP1_U2/quick_start/converted_models/user/sc_models"});
+await imageserver.start({customServer: "http://localhost:11180/imageserver.html?viewer=csr&", 
+    sczDirectory:"E:/communicator/HOOPS_Communicator_2022_SP1_U2/quick_start/converted_models/user/sc_models"});
 ```
 
 ## Using the image server with your own application logic and/or upgrading the version of HOOPS Communicator manually
-While you have a lot of control over the image generation via the callback mechanism, it migth sometimes be necessary to use your own custom logic within the viewer itself. To do this you can provide the folder to the webviewer source during startup.
+While you have a lot of control over the image generation via the callback mechanism, it might sometimes be necessary to use your own custom logic within the viewer itself. To do this you can provide the folder to the webviewer source during startup.
 
 ```
 await imageserver.start({customViewerDirectory:"E:/myviewer"});
