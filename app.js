@@ -39,14 +39,16 @@ exports.start = async function (params) {
     app.use(express.urlencoded({ limit: '25mb', extended: false }));
 
 
-    if (customViewerDirectory) {
-        app.use(express.static(customViewerDirectory));
-    }
-    else {
-        app.use(express.static(path.join(__dirname, 'public')));
-    }
+    if (!customServer) {
+        if (customViewerDirectory) {
+            app.use(express.static(customViewerDirectory));
+        }
+        else {
+            app.use(express.static(path.join(__dirname, 'public')));
+        }
 
-    app.listen(port);
+        app.listen(port);
+    }
 
     puppeteer = require('puppeteer');
     browser = await puppeteer.launch();

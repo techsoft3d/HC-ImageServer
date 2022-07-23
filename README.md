@@ -54,7 +54,7 @@ let data = await imageserver.generateImage(null,{imageData:myscsdata});
 
 
 ## Using your Own Communicator Server for SCZ Streaming
-The default implementation of the Image Server uses is own server to serve scs models only. However, if you want to generate images from scz models you can run your own Communicator server for image generation. To do this the following steps are required:
+The default implementation of the Image Server uses is own express http server to serve scs models only. However, if you want to generate images from scz models you can run your own Communicator server for image generation. To do this the following steps are required:
 
 1.  Install and run the HOOPS Communicator server on the machine that the image server is running on. From the package this can be accomplished by simply running **start_server.bat** from the quick_start directory.
 2.  Copy imageserver.html into the source webviewer folder ("web_viewer/src" if you use the HOOPS Communicator installation). This file is a slightly modifed version of hoops_web_viewer_sample.html and can be found in the public folder of this package.
