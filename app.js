@@ -1,6 +1,13 @@
 const fs = require('fs');
 const path = require('path');
 
+if (!fs.existsSync("./config/default2.json")) {
+    process.env["NODE_CONFIG_DIR"] = __dirname + "/config/";
+}
+
+const config = require('config');
+//console.log(config.get("hc-imageservice"));
+
 const express = require('express');
 const { v4: uuidv4 } = require('uuid');
 const del = require('del');
@@ -18,11 +25,58 @@ var pageCache = [];
 exports.startServer = async function () {
 
     const app = express();
-    app.listen(3030);
+    const router = express.Router();
+    const cors = require('cors');
+    const bodyParser = require('body-parser');
+    const multer = require('multer');
+
+    app.use(cors());
+    app.use(express.json({ limit: '25mb' }));
+    app.use(express.urlencoded({ limit: '25mb', extended: false }));
+
+    app.use(bodyParser.urlencoded({ extended: false }));
+    app.use(bodyParser.json());
+
+    const fileStorage = multer.diskStorage({
+      destination: (req, file, cb) => {
+       cb(null, path.join(__dirname, "/public/models"));
+      },
+      filename: (req, file, cb) => {
+            var uv4 = uuidv4();
+            cb(null, uv4);
+        }
+    });
+
+    app.use(multer({ storage: fileStorage }).single('file'));
+
+
+    this.start(config.get("hc-imageservice"));
+
+    let _this = this;
+    router.post('/generateImage', async function (req, res, next) {
+        let args;
+        if (req.get("IS-API-Arg"))
+            args = JSON.parse(req.get("IS-API-Arg"));
+        else
+            args = {};
+
+        let scsdata = fs.readFileSync(path.join(__dirname, "/public/models",req.file.filename));
+        del(path.join(__dirname, "/public/models",req.file.filename), { force: true });
+        args.scsData = scsdata;
+        let blob = await _this.generateImage(null, args);
+        return res.send(Buffer.from(blob));
+    });
+
+    app.use("/api", router);
+    app.listen(config.get("hc-imageservice.apiPort"));
+
+    console.log("API Server Started");
+
 };
 
 
 exports.start = async function (params) {    
+
     if (params && params.viewerPort) {
         viewerPort = params.viewerPort;
     }
@@ -61,6 +115,8 @@ exports.start = async function (params) {
 
     puppeteer = require('puppeteer');
     browser = await puppeteer.launch();
+
+    console.log("Image Service Started");
 };
 
 
@@ -73,13 +129,19 @@ async function waitUntilFullyDrawn(page, params)
             const lastframetime = await page.evaluate(() => {
                 return new Date() - currentFrameDrawn;
             });
-            if (params && params.callback && modelStructureReadyCalled == false) {
+            if (params && (params.callback || params.code) && modelStructureReadyCalled == false) {
                 modelStructureReadyCalled = await page.evaluate(() => {
                     currentFrameDrawn = new Date();
                     return modelStructureReady;
                 });
                 if (modelStructureReadyCalled) {
-                    await page.evaluate(params.callback);
+                    if (params.code) {
+                        await page.evaluate(params.code);
+
+                    }
+                    else {
+                        await page.evaluate(params.callback);   
+                    }
                 }
     
             }
@@ -97,8 +159,9 @@ async function waitUntilFullyDrawn(page, params)
 
 exports.generateImage = async function (scspath,params) {  
 
-    var uv4;
-    if (scspath) {
+    var uv4 = null;
+    
+    if (scspath || (params && params.scsData)) {
         let data;
         if (params && params.scsData) {
             data = params.scsData;
@@ -120,6 +183,7 @@ exports.generateImage = async function (scspath,params) {
             }
         }
     }
+    
 
     let page = null;
     if (params && params.cacheID)
@@ -140,7 +204,7 @@ exports.generateImage = async function (scspath,params) {
         await page.setViewport(params.size);
     }
 
-    if (scspath) {
+    if (uv4) {
         if (customServer) {
             await page.goto(customServer + 'model=' + uv4);
         }
@@ -255,5 +319,5 @@ exports.removeFromCache = async function (cacheID) {
 
 
 if (require.main === module) {
-    console.log("main");
+    this.startServer();
   } 
