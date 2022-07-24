@@ -67,6 +67,24 @@ exports.startServer = async function () {
         return res.send(Buffer.from(blob));
     });
 
+    router.get('/generateImage', async function (req, res, next) {
+        let args;
+        if (req.get("IS-API-Arg"))
+            args = JSON.parse(req.get("IS-API-Arg"));
+        else
+            args = {};
+
+        let blob = await _this.generateImage(args.scsPath, args);
+        return res.send(Buffer.from(blob));
+    });
+
+
+    router.put('/removeFromCache/:cacheID', async function (req, res, next) {
+        await _this.removeFromCache(req.params.cacheID);
+        res.sendStatus(200);
+        
+    });
+
     app.use("/api", router);
     app.listen(config.get("hc-imageservice.apiPort"));
 
