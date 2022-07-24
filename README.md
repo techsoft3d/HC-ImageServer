@@ -25,6 +25,12 @@ For performance reasons the image service should be kept running between image r
 Data contains binary image data blob that can be serialized to disk, send to s3, etc.
 
 
+## Specifying image size
+The default image size is 800x600. To specify a different size use the size parameter:
+
+```
+let data = await imageservice.generateImage("E:/mymodels/microengine.scs", {size:{width:1280,height:800}});
+```
 
 ## Generate image data from scs file and write png to disk
 ```
@@ -54,11 +60,11 @@ let data = await imageservice.generateImage(null,{scsData:myscsdata});
 
 
 ## Using your Own Communicator Service for SCZ Streaming
-The default implementation of the Image Service uses is own express http server to serve scs models only. However, if you want to generate images from scz models you can run your own Communicator server for image generation. To do this the following steps are required:
+The default implementation of the Image Service uses is own express http server to serve scs models only. However, if you want to generate images from scz models you can run your own Communicator Streaming Server for image generation. To do this the following steps are required:
 
 1.  Install and run the HOOPS Communicator service on the machine that the image service is running on. From the package this can be accomplished by simply running **start_server.bat** from the quick_start directory.
 2.  Copy imageservice.html into the source webviewer folder ("web_viewer/src" if you use the HOOPS Communicator installation). This file is a slightly modifed version of hoops_web_viewer_sample.html and can be found in the public folder of this package.
-3. Provide the server url as well as the directory to place the scz files when starting the image service (see example below when running the HOOPS Communicator server directly from the installation.)
+3.  Provide the server url as well as the directory to place the scz files when starting the image service (see example below when running the HOOPS Communicator server directly from the installation.)
 
 ```
 await imageservice.start({customServer: "http://localhost:11180/imageservice.html?viewer=csr&", 
@@ -72,7 +78,8 @@ While you have a lot of control over the image generation via the callback mecha
 await imageservice.start({customViewerDirectory:"E:/myviewer"});
 ```
 
-The image service expects a file called imageservice.html to be accesible in the top level viewer folder which is a slightly modified version of "hoops_web_viewer_sample.html" with the UI removed and a few callbacks added. See below for the relevant code changes. If you just want to upgrade the version of HOOPS Communicator, all you need to do is copy the imageservice.html file from the public folder of this module into your viewer folder. It will likely work with later versions of HOOPS Communicator. If not, simply include the code below in "hoops_web_viewer_sample.html"
+The image service expects a file called imageservice.html to be accesible in the top level viewer folder which is a slightly modified version of "hoops_web_viewer_sample.html" with the UI removed and a few callbacks added. See below for the relevant code changes. If you just want to upgrade the version of HOOPS Communicator, all you need to do is copy the imageservice.html file from the public folder of this module into your viewer folder. It will likely work with later versions of HOOPS Communicator. If not, simply include the code below in "hoops_web_viewer_sample.html" and rename the file to imageservice.html.
+
 
 ```
 
@@ -102,7 +109,7 @@ window.onload = function () {
 
 
 ## Advanced Topic: Caching
-By default the image service generates a new internal HOOPS Communicator context every time a new image is requested. Creating this new context can take a bit of time. In addition the image server has to load the requested scs file into the viewer. If you know you want to render multiple images from the same model you can provide a cacheID to the image service. If the cacheID is provided the image service will reuse the same HOOPS Communicator viewer context if it finds it in the cache. It will still reload the model though unless you omit the model reference from the call. See below for an example:
+By default the image service generates a new internal HOOPS Communicator context every time a new image is requested. Creating this new context can take a bit of time. In addition the image server has to load the requested scs file into the viewer, even if the model stays the same. If you know you want to render multiple images from the same model you can provide a cacheID to the image service. If the cacheID is provided the image service will reuse the same HOOPS Communicator viewer context if it finds it in the cache. It will still reload the model though unless you omit the model reference from the call. See below for an example:
 
 ```
 await imageservice.generateImage(outputPath:"c:/temp/micro1.png","E:/mymodels/microengine.scs",{cacheID:"micro"});          //make a screenshot of microengine with the default camera
