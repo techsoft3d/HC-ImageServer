@@ -74,7 +74,7 @@ await imageservice.start({viewerPort:3010}); //provide optional port on which vi
 ```
 
 ## Using your Own Communicator Service for SCZ Streaming
-The default implementation of the Image Service uses is own express http server to serve scs models only. However, if you want to generate images from scz models you can run your own Communicator Streaming Server for image generation. To do this the following steps are required:
+The default implementation of the Image Service uses an internal http-server to serve scs models only. However, if you want to generate images from scz models you can run your own Communicator Streaming Server for image generation. To do this the following steps are required:
 
 1.  Install and run the HOOPS Communicator service on the machine that the image service is running on. From the package this can be accomplished by simply running **start_server.bat** from the quick_start directory.
 2.  Copy imageservice.html into the source webviewer folder ("web_viewer/src" if you use the HOOPS Communicator installation). This file is a slightly modifed version of hoops_web_viewer_sample.html and can be found in the public folder of this package.
