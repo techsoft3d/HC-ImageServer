@@ -1,5 +1,15 @@
 # HC-ImageService
 
+## Overview
+
+A project to generate PNG's from HOOPS Communicator Stream Cache files on the server. It can either be used as a node module that can be included in your application or as a standalone service that can be accessed via a simple REST API. 
+
+## GitHub Project
+
+The public github project can be found here:  
+https://github.com/techsoft3d/HC-ImageService
+
+
 ## Install
 
 npm install ts3d-hc-imageservice
@@ -8,7 +18,7 @@ npm install ts3d-hc-imageservice
 
 ```
 const imageservice = require('ts3d-hc-imageservice');
-await imageservice.start({viewerPort:3011}); //provide optional port on which viewer is served, defaults to 3010
+await imageservice.start(); 
 ```
 
 
@@ -58,6 +68,10 @@ The callback will be executed after the modelStructureReady callback in the HOOP
 let data = await imageservice.generateImage(null,{scsData:myscsdata});
 ```
 
+## Specifying custom port for internal HOOPS Communicator Viewer used for image generation
+```
+await imageservice.start({viewerPort:3010}); //provide optional port on which viewer is served, defaults to 4001
+```
 
 ## Using your Own Communicator Service for SCZ Streaming
 The default implementation of the Image Service uses is own express http server to serve scs models only. However, if you want to generate images from scz models you can run your own Communicator Streaming Server for image generation. To do this the following steps are required:
@@ -150,13 +164,13 @@ To run the image service with the REST API you have two options
 *  via NPX: **npx ts3d-hc-imageservice**
 *  by checking out the github project and running it via **npm start**
 
-The default port of the REST API is 3030. If you want to change the port or make other startup changes you need to provide a file called default.json in the config directory. The file should contain the following properties:
+The default port of the REST API is 4000. If you want to change the port or make other startup changes you need to provide a file called default.json in the config directory. The file should contain the following properties:
 
 ```
 {
   "hc-imageservice": {
-    "apiPort": "3030",
-    "viewerPort": "3010",
+    "apiPort": "4000",
+    "viewerPort": "4001",
     "customServer": "",
     "customViewerDirectory": ""    
   }
@@ -180,7 +194,7 @@ let form = new FormData();
 form.append('file', fs.createReadStream("c:/temp/myfile.scs"));
 let api_arg  = {code:text,size:{width:1280,height:800}};
         
-res = await fetch("http://localhost:3030" + '/api/generateImage', { method: 'POST', body: form, headers: {'IS-API-Arg': JSON.stringify(api_arg)}});
+res = await fetch("http://localhost:4000" + '/api/generateImage', { method: 'POST', body: form, headers: {'IS-API-Arg': JSON.stringify(api_arg)}});
 let data = await res.arrayBuffer();
 fs.writeFileSync("c:/temp/myfile.png", Buffer.from(data));
 ```
@@ -201,7 +215,7 @@ Loads an SCS/SCZ file from disk and generates an image from it.
 ```
 let api_arg  = {scsPath:'E:/temp/myfile.scs'};        
         
-res = await fetch("http://localhost:3030" + '/api/generateImage', { headers: {'IS-API-Arg': JSON.stringify(api_arg)}});
+res = await fetch("http://localhost:4000" + '/api/generateImage', { headers: {'IS-API-Arg': JSON.stringify(api_arg)}});
 let data = await res.arrayBuffer();
 fs.writeFileSync("c:/temp/myfile.png", Buffer.from(data));
 ```
@@ -221,7 +235,7 @@ Removes an entry from the cache.
 
 #### **Example**
 ```
-let res = await fetch("http://localhost:3030" + '/api/removeFromCache/c79dd99e-cbbd-4b6d-ba43-15986b1adc1', { method: 'put')}});
+let res = await fetch("http://localhost:4000" + '/api/removeFromCache/c79dd99e-cbbd-4b6d-ba43-15986b1adc1', { method: 'put')}});
 ```
 
 #### **Parameters**
@@ -231,8 +245,9 @@ let res = await fetch("http://localhost:3030" + '/api/removeFromCache/c79dd99e-c
 #### **Returns**
 NONE
 
-
-
 ## HOOPS Communicator Version
 This version of the HC Image Service is using **HOOPS Communicator 2022 SP1 U2**. It will likely not work with scs files generated with newer versions of HOOPS Communicator unless you provide a custom viewer directory (see above).
+
+## Disclaimer
+**This library is not an officially supported part of HOOPS Communicator and provided as-is.**
 

@@ -1,7 +1,7 @@
 {
   "hc-imageservice": {
-    "apiPort": "3030",
-    "viewerPort": "3010",
+    "apiPort": "4000",
+    "viewerPort": "4001",
     "customServer": "",
     "customViewerDirectory": ""
     

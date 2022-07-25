@@ -12,7 +12,7 @@ const { v4: uuidv4 } = require('uuid');
 const del = require('del');
 
 var puppeteer;
-var viewerPort;
+var viewerPort = 4001;
 var browser;
 var customServer = null;
 var sczDirectory = null;
@@ -98,16 +98,14 @@ exports.start = async function (params) {
         viewerPort = params.viewerPort;
     }
     else {
-        viewerPort = 3010;
+        viewerPort = 4001;
     }
 
     if (params && params.customServer) {
         customServer = params.customServer;
         sczDirectory = params.sczDirectory;
     }
-    else {
-        viewerPort = 3010;
-    }
+   
 
     if (params && params.customViewerDirectory) {
         customViewerDirectory = params.customViewerDirectory;
