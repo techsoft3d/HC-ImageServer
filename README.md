@@ -142,6 +142,97 @@ imageservice.removeFromCache("micro");
 ```
 
 
+## Using the REST API
+If you are not using NODE as your primary servers-side development environment and/or want to run the image service on a different server from your main application, you can use the built-in REST API to interact with the service. It is important to note that the REST API should not be exposed to the public internet. It is intended to be used only for communication with another server behind your firewall.
+
+To run the image service with the REST API you have two options
+
+*  via NPX: **npx ts3d-hc-imageservice**
+*  by checking out the github project and running it via **npm start**
+
+The default port of the REST API is 3030. If you want to change the port or make other startup changes you need to provide a file called default.json in the config directory. The file should contain the following properties:
+
+```
+{
+  "hc-imageservice": {
+    "apiPort": "3030",
+    "viewerPort": "3010",
+    "customServer": "",
+    "customViewerDirectory": ""    
+  }
+}
+```
+
+The REST API is analogous to the API calls documented above and consists of three endpoints:
+
+
+
+### **/api/generateImage**  (POST)
+
+#### **Description**
+Uploads an SCS or SCZ file via multipart form-data upload and generates an image from it.
+
+#### **Example**
+```
+var text = 'hwv.view.setBackgroundColor(new Communicator.Color(0,0,0));';
+
+let form = new FormData();
+form.append('file', fs.createReadStream("c:/temp/myfile.scs"));
+let api_arg  = {code:text,size:{width:1280,height:800}};
+        
+res = await fetch("http://localhost:3030" + '/api/generateImage', { method: 'POST', body: form, headers: {'IS-API-Arg': JSON.stringify(api_arg)}});
+let data = await res.arrayBuffer();
+fs.writeFileSync("c:/temp/myfile.png", Buffer.from(data));
+```
+
+#### **Parameters**
+All parameters are passed in the header via "IS-API-ARG" and are mostly analogous to the parameters of the generateImage function described above, except for the callback parameter which is replaced by the "code" parameter. The code parameter is the text of your custom function that gets executed after modelStructureReady has triggered.
+
+#### **Returns**
+Image Blob
+
+
+### **/api/generateImage**  (GET)
+
+#### **Description**
+Loads an SCS/SCZ file from disk and generates an image from it.
+
+#### **Example**
+```
+let api_arg  = {scsPath:'E:/temp/myfile.scs'};        
+        
+res = await fetch("http://localhost:3030" + '/api/generateImage', { headers: {'IS-API-Arg': JSON.stringify(api_arg)}});
+let data = await res.arrayBuffer();
+fs.writeFileSync("c:/temp/myfile.png", Buffer.from(data));
+```
+
+#### **Parameters**
+All parameters are passed in the header via "IS-API-ARG" and are mostly analogous to the parameters of the generateImage function described above, except for the callback parameter which is replaced by the "code" parameter as well as the scsPath parameter which is the path to the scs (or scz) file.
+
+#### **Returns**
+Image Blob
+
+
+  
+### **/api/removeFromCache** (PUT)
+
+#### **Description**
+Removes an entry from the cache.
+
+#### **Example**
+```
+let res = await fetch("http://localhost:3030" + '/api/removeFromCache/c79dd99e-cbbd-4b6d-ba43-15986b1adc1', { method: 'put')}});
+```
+
+#### **Parameters**
+*As specified in URL string:*
+* CacheID (see above)
+
+#### **Returns**
+NONE
+
+
+
 ## HOOPS Communicator Version
 This version of the HC Image Service is using **HOOPS Communicator 2022 SP1 U2**. It will likely not work with scs files generated with newer versions of HOOPS Communicator unless you provide a custom viewer directory (see above).
 

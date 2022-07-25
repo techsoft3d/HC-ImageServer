@@ -1,12 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 
-if (!fs.existsSync("./config/default2.json")) {
+if (!fs.existsSync("./config/default.json")) {
     process.env["NODE_CONFIG_DIR"] = __dirname + "/config/";
 }
 
 const config = require('config');
-//console.log(config.get("hc-imageservice"));
 
 const express = require('express');
 const { v4: uuidv4 } = require('uuid');
