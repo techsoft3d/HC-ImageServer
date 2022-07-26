@@ -127,7 +127,7 @@ By default the image service generates a new internal HOOPS Communicator context
 
 ```
 await imageservice.generateImage(outputPath:"c:/temp/micro1.png","E:/mymodels/microengine.scs",{cacheID:"micro"});          //make a screenshot of microengine with the default camera
-await this.generateImage(null,{outputPath:"c:/temp/micro2.png",callback:function() {hwv.view.setViewOrientation(Communicator.ViewOrientation.Top);},cacheID:"micro"});  //make another screenshot of microengine from the top without reloading the model
+await imageservice.generateImage(null,{outputPath:"c:/temp/micro2.png",callback:function() {hwv.view.setViewOrientation(Communicator.ViewOrientation.Top);},cacheID:"micro"});  //make another screenshot of microengine from the top without reloading the model
 ```
 
 You can also use this mechanism to start the viewer without loading a model and then do the loading in your callback. See below for an example. This approach of course requires access to the models from the HOOPS Web Viewer context so you most likely want to use this in combination with setting a custom viewer directory. (see above)
