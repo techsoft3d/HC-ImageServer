@@ -240,7 +240,7 @@ exports.generateImage = async function (scspath,params) {
 
     await waitUntilFullyDrawn(page, params);
 
-    await page.screenshot({ path: path.join(__dirname, './screenshots/' + uv4 + '.png') });
+    await page.screenshot({ omitBackground: true,path: path.join(__dirname, './screenshots/' + uv4 + '.png') });
     if (!params || !params.cacheID) {
         await page.close();
     }
