@@ -106,6 +106,7 @@ function frameDrawn() {
 
 function msready() {
     hwv.view.setDisplayIncompleteFrames(false);
+    hwv.view.setBackfacesVisible(true);
     modelStructureReady = true;
 }
 

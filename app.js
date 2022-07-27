@@ -151,7 +151,7 @@ async function waitUntilFullyDrawn(page, params)
                 });
                 if (modelStructureReadyCalled) {
                     if (params.code) {
-                        await page.evaluate(params.code);
+                        await page.evaluate("(async () => {" + params.code + "})()");
 
                     }
                     else {
@@ -277,6 +277,20 @@ exports.removeFromCache = async function (cacheID) {
 };
 
 
+
+// async function myCallback()
+// {
+//     let rmatrix = Communicator.Matrix.xAxisRotation(-90);
+//     await hwv.model.setNodeMatrix(hwv.model.getRootNode(), rmatrix);
+//     await hwv.view.fitWorld();
+// }
+
+
+// (async () => {
+//     await this.start();
+//     this.generateImage("E:/communicator/HOOPS_Communicator_2022_SP1_U2/quick_start/converted_models/user/scs_models/railroadcar.scs", {outputPath:"./car.png",callback:myCallback,size:{width:1280,height:800}});
+// })();
+
 // function myCallback()
 // {
 //     hwv.view.setBackgroundColor(new Communicator.Color(0,0,0));
@@ -335,4 +349,4 @@ exports.removeFromCache = async function (cacheID) {
 
 if (require.main === module) {
     this.startServer();
-  } 
+ } 
