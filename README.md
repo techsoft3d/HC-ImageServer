@@ -50,16 +50,16 @@ let data = await imageservice.generateImage("E:/mymodels/microengine.scs",{outpu
 
 ## Generate image data from scs file and execute custom JS
 ```
-function myCallback()
+function myCallback(color)
 {
-    hwv.view.setBackgroundColor(new Communicator.Color(0,0,0));
+    hwv.view.setBackgroundColor(new Communicator.Color(color,color,color));
     hwv.view.isolateNodes([8,6]);
 }
 
 
-let data = await imageservice.generateImage("E:/mymodels/microengine.scs",{callback:mycallback});
+let data = await imageservice.generateImage("E:/mymodels/microengine.scs",{callback:mycallback, callbackParam:128});
 ```
-The callback will be executed after the modelStructureReady callback in the HOOPS Web Viewer has triggered.
+The callback will be executed after the modelStructureReady callback in the HOOPS Web Viewer has triggered and receive the parameter defined in callbackParam.
 
 
 

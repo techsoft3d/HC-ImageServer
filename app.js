@@ -151,11 +151,11 @@ async function waitUntilFullyDrawn(page, params)
                 });
                 if (modelStructureReadyCalled) {
                     if (params.code) {
-                        await page.evaluate("(async () => {" + params.code + "})()");
+                        await page.evaluate("(async () => {" + params.code + "})()", params.callbackParam);
 
                     }
                     else {
-                        await page.evaluate(params.callback);   
+                        await page.evaluate(params.callback,params.callbackParam);   
                     }
                 }
     
@@ -278,9 +278,9 @@ exports.removeFromCache = async function (cacheID) {
 
 
 
-// async function myCallback()
+// async function myCallback(rot)
 // {
-//     let rmatrix = Communicator.Matrix.xAxisRotation(-90);
+//     let rmatrix = Communicator.Matrix.xAxisRotation(rot);
 //     await hwv.model.setNodeMatrix(hwv.model.getRootNode(), rmatrix);
 //     await hwv.view.fitWorld();
 // }
@@ -288,7 +288,7 @@ exports.removeFromCache = async function (cacheID) {
 
 // (async () => {
 //     await this.start();
-//     this.generateImage("E:/communicator/HOOPS_Communicator_2022_SP1_U2/quick_start/converted_models/user/scs_models/railroadcar.scs", {outputPath:"./car.png",callback:myCallback,size:{width:1280,height:800}});
+//     this.generateImage("E:/communicator/HOOPS_Communicator_2022_SP1_U2/quick_start/converted_models/user/scs_models/railroadcar.scs", {outputPath:"./car.png",callback:myCallback,callbackParam:45,size:{width:1280,height:800}});
 // })();
 
 // function myCallback()
