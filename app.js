@@ -20,6 +20,8 @@ var customViewerDirectory = null;
 
 var pageCache = [];
 
+var viewerServer = null;
+
 
 exports.startServer = async function () {
 
@@ -125,7 +127,7 @@ exports.start = async function (params) {
             app.use(express.static(path.join(__dirname, 'public')));
         }
 
-        app.listen(viewerPort);
+        viewerServer = app.listen(viewerPort);
     }
 
     puppeteer = require('puppeteer');
@@ -266,6 +268,11 @@ exports.generateImage = async function (scspath,params) {
 
 exports.shutdown = async function () {
     await browser.close();
+    if (viewerServer) {
+        await viewerServer.close();
+        viewerServer = null;
+    }
+
 };
 
 
@@ -276,6 +283,21 @@ exports.removeFromCache = async function (cacheID) {
     }
 };
 
+
+// async function myCallback(rot)
+// {
+//     let rmatrix = Communicator.Matrix.xAxisRotation(rot);
+//     await hwv.model.setNodeMatrix(hwv.model.getRootNode(), rmatrix);
+//     await hwv.view.fitWorld();
+// }
+
+// (async () => {
+//     await this.start();
+//     await this.generateImage("E:/communicator/HOOPS_Communicator_2022_SP1_U2/quick_start/converted_models/user/scs_models/railroadcar.scs", {outputPath:"./car.png",callback:myCallback,callbackParam:45,size:{width:1280,height:800}});
+//     await this.shutdown();
+//     await this.start();
+//     await this.generateImage("E:/communicator/HOOPS_Communicator_2022_SP1_U2/quick_start/converted_models/user/scs_models/railroadcar.scs", {outputPath:"./car2.png",callback:myCallback,callbackParam:45,size:{width:1280,height:800}});
+// })();
 
 
 // async function myCallback(rot)

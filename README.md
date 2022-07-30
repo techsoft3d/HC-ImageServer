@@ -1,8 +1,16 @@
 # HC-ImageService
 
+
+## Version Update (0.2.0) 
+*  Callback parameter added (see callbackParam below)
+*  transparent background for generated images
+*  async support for callbacks
+*  bugfixes
+
+
 ## Overview
 
-A project to generate PNG's from HOOPS Communicator Stream Cache files on the server. It can either be used as a node module that can be included in your application or as a standalone service that can be accessed via a simple REST API. 
+A library to generate PNG's from HOOPS Communicator Stream Cache files on the server. It can either be used as a node module that can be included in your application or as a standalone service that can be accessed via a simple REST API. 
 
 ## GitHub Project
 
@@ -140,7 +148,7 @@ await imageservice.generateImage("E:/mymodels/microengine.scs",{outputPath:"c:/t
 await imageservice.generateImage(null,{outputPath:"c:/temp/micro2.png",callback:function() {hwv.view.setViewOrientation(Communicator.ViewOrientation.Top);},cacheID:"micro"});  //make another screenshot of microengine from the top without reloading the model
 ```
 
-You can also use this mechanism to start the viewer without loading a model and then do the loading in your callback. See below for an example. This approach of course requires access to the models from the HOOPS Web Viewer context so you most likely want to use this in combination with setting a custom viewer directory. (see above)
+You can also use this mechanism to start the viewer without loading a model and then do the loading in your callback. See below for an example. This approach requires access to the models from the HOOPS Web Viewer context so you most likely want to use this in combination with setting a custom viewer directory. (see above)
 
 
 ```
@@ -210,7 +218,7 @@ fs.writeFileSync("c:/temp/myfile.png", Buffer.from(data));
 ```
 
 #### **Parameters**
-All parameters are passed in the header via "IS-API-ARG" and are mostly analogous to the parameters of the generateImage function described above, except for the callback parameter which is replaced by the "code" parameter. The code parameter is the text of your custom function that gets executed after modelStructureReady has triggered.
+All parameters are passed in the header via "IS-API-ARG" and are mostly analogous to the parameters of the generateImage function described above. The callback and callbackParam parameters are not available. Use code instead. (see example above)
 
 #### **Returns**
 Image Blob
@@ -231,13 +239,12 @@ fs.writeFileSync("c:/temp/myfile.png", Buffer.from(data));
 ```
 
 #### **Parameters**
-All parameters are passed in the header via "IS-API-ARG" and are mostly analogous to the parameters of the generateImage function described above, except for the callback parameter which is replaced by the "code" parameter as well as the scsPath parameter which is the path to the scs (or scz) file.
+All parameters are passed in the header via "IS-API-ARG" and are mostly analogous to the parameters of the generateImage function described above. The callback and callbackParam parameters are not available. Use code instead. (see example above). The scsPath parameter is the path to the scs (or scz) file.
 
 #### **Returns**
 Image Blob
 
 
-  
 ### **/api/removeFromCache** (PUT)
 
 #### **Description**
@@ -255,8 +262,9 @@ let res = await fetch("http://localhost:4000" + '/api/removeFromCache/c79dd99e-c
 #### **Returns**
 NONE
 
+
 ## HOOPS Communicator Version
-This version of the HC Image Service is using **HOOPS Communicator 2022 SP1 U2**. It will likely not work with scs files generated with newer versions of HOOPS Communicator unless you provide a custom viewer directory (see above).
+This version of the HC Image Service is using **HOOPS Communicator 2022 SP1 U2**. It will likely not work with scs files generated with newer versions of HOOPS Communicator unless you provide a custom viewer directory (see below for more information).
 
 ## Disclaimer
 **This library is not an officially supported part of HOOPS Communicator and provided as-is.**
