@@ -135,7 +135,8 @@ window.onload = function () {
 By default the image service generates a new internal HOOPS Communicator context every time a new image is requested. Creating this new context can take a bit of time. In addition the image service has to load the requested scs file into the viewer, even if the model stays the same. If you know you want to render multiple images from the same model you can provide a cacheID to the image service. If the cacheID is provided the image service will reuse the same HOOPS Communicator viewer context if it finds it in the cache. It will still reload the model though unless you omit the model reference from the call. See below for an example:
 
 ```
-await imageservice.generateImage(outputPath:"c:/temp/micro1.png","E:/mymodels/microengine.scs",{cacheID:"micro"});          //make a screenshot of microengine with the default camera
+await imageservice.generateImage("E:/mymodels/microengine.scs",{outputPath:"c:/temp/micro1.png" cacheID:"micro"});          //make a screenshot of microengine with the default camera
+
 await imageservice.generateImage(null,{outputPath:"c:/temp/micro2.png",callback:function() {hwv.view.setViewOrientation(Communicator.ViewOrientation.Top);},cacheID:"micro"});  //make another screenshot of microengine from the top without reloading the model
 ```
 
