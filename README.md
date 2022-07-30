@@ -62,6 +62,14 @@ let data = await imageservice.generateImage("E:/mymodels/microengine.scs",{callb
 The callback will be executed after the modelStructureReady callback in the HOOPS Web Viewer has triggered and receive the parameter defined in callbackParam.
 
 
+## Generate image data from scs file and execute custom JS from provided string
+```
+var text = 'let color = 128; hwv.view.setBackgroundColor(new Communicator.Color(color,color,color)); hwv.view.isolateNodes([8,6]);';
+
+let data = await imageservice.generateImage("E:/mymodels/microengine.scs",{code:text});
+```
+The text passed in via code will be evaluated in the HOOPS Web Viewer. In this case you need to "bake" all potential function parameters into the provided string as no parameters are passed through separately.
+
 
 ## Generate image data from scs data blob
 ```
@@ -123,8 +131,8 @@ window.onload = function () {
 ```
 
 
-## Advanced Topic: Caching
-By default the image service generates a new internal HOOPS Communicator context every time a new image is requested. Creating this new context can take a bit of time. In addition the image server has to load the requested scs file into the viewer, even if the model stays the same. If you know you want to render multiple images from the same model you can provide a cacheID to the image service. If the cacheID is provided the image service will reuse the same HOOPS Communicator viewer context if it finds it in the cache. It will still reload the model though unless you omit the model reference from the call. See below for an example:
+## Caching
+By default the image service generates a new internal HOOPS Communicator context every time a new image is requested. Creating this new context can take a bit of time. In addition the image service has to load the requested scs file into the viewer, even if the model stays the same. If you know you want to render multiple images from the same model you can provide a cacheID to the image service. If the cacheID is provided the image service will reuse the same HOOPS Communicator viewer context if it finds it in the cache. It will still reload the model though unless you omit the model reference from the call. See below for an example:
 
 ```
 await imageservice.generateImage(outputPath:"c:/temp/micro1.png","E:/mymodels/microengine.scs",{cacheID:"micro"});          //make a screenshot of microengine with the default camera
