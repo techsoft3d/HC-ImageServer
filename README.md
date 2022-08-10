@@ -89,7 +89,7 @@ let data = await imageservice.generateImage(null,{scsData:myscsdata});
 await imageservice.start({viewerPort:3010}); //provide optional port on which viewer is served, defaults to 4001
 ```
 
-## Using your Own Communicator Service for SCZ Streaming
+## Using your Own HOOPS Communicator Server for SCZ Streaming
 The default implementation of the Image Service uses an internal http-server to serve scs models only. However, if you want to generate images from scz models you can run your own Communicator Streaming Server for image generation. To do this the following steps are required:
 
 1.  Install and run the HOOPS Communicator service on the machine that the image service is running on. From the package this can be accomplished by simply running **start_server.bat** from the quick_start directory.
