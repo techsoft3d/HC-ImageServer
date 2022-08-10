@@ -1,5 +1,7 @@
 # HC-ImageService
 
+## Version Update (0.2.1) 
+*  Updated to HOOPS Communicator 2022 SP2
 
 ## Version Update (0.2.0) 
 *  Callback parameter added (see callbackParam below)
@@ -264,7 +266,7 @@ NONE
 
 
 ## HOOPS Communicator Version
-This version of the HC Image Service is using **HOOPS Communicator 2022 SP1 U2**. It will likely not work with scs files generated with newer versions of HOOPS Communicator unless you provide a custom viewer directory (see below for more information).
+This version of the HC Image Service is using **HOOPS Communicator 2022 SP2**. It will likely not work with scs files generated with newer versions of HOOPS Communicator unless you provide a custom viewer directory.
 
 ## Disclaimer
 **This library is not an officially supported part of HOOPS Communicator and provided as-is.**
