@@ -32,7 +32,7 @@ https://github.com/techsoft3d/HC-ImageService
 
 ## HOOPS Communicator Version
 
-Make sure the version of HOOPS Communicator you are using is compatible with the version used by the image service. If the SCS files used are generated with a newer HOOPS Communicator version than mentioned in the Version Update above, the image generation will likely fail. In that case, please see further below on how to manually upgrade the conversion service or use a custom viewer directory. Models generated with older versions of HOOPS Communicator should work fine. We will try to keep the image service up to date with the latest HOOPS Communicator version in a timely manner.
+Make sure the version of HOOPS Communicator you are using is compatible with the version used by the image service. If the SCS files used are generated with a newer HOOPS Communicator version than mentioned in the Version Update above, the image generation will likely fail. In that case, please see further below on how to manually upgrade the image service or use a custom viewer directory. Models generated with older versions of HOOPS Communicator should work fine. We will try to keep the image service up to date with the latest HOOPS Communicator version in a timely manner.
 
 ## Install
 
