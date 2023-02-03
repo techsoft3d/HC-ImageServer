@@ -26,6 +26,13 @@ A library to generate PNG's from HOOPS Communicator Stream Cache files on the se
 The public github project can be found here:  
 https://github.com/techsoft3d/HC-ImageService
 
+## Disclaimer
+**This library is not an officially supported part of HOOPS Communicator and provided as-is.**
+
+
+## HOOPS Communicator Version
+
+Make sure the version of HOOPS Communicator you are using is compatible with the version used by the image service. If the SCS files used are generated with a newer HOOPS Communicator version than mentioned in the Version Update above, the image generation will likely fail. In that case, please see further below on how to manually upgrade the conversion service or use a custom viewer directory. Models generated with older versions of HOOPS Communicator should work fine. We will try to keep the image service up to date with the latest HOOPS Communicator version in a timely manner.
 
 ## Install
 
@@ -271,10 +278,4 @@ let res = await fetch("http://localhost:4000" + '/api/removeFromCache/c79dd99e-c
 #### **Returns**
 NONE
 
-
-## HOOPS Communicator Version
-This version of the HC Image Service is using **HOOPS Communicator 2022 SP2**. It will likely not work with scs files generated with newer versions of HOOPS Communicator unless you provide a custom viewer directory.
-
-## Disclaimer
-**This library is not an officially supported part of HOOPS Communicator and provided as-is.**
 
