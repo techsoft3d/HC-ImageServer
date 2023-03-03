@@ -1,6 +1,6 @@
 {
   "name": "ts3d-hc-imageservice",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "",
   "main": "app.js",
   "bin": {
