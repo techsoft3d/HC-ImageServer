@@ -1,34 +1,32 @@
 # HC-ImageService
 
-
-## Version Update (0.3.3) 
-*  Evalulate callback without generating image. See below for example usage
+## Version Update (0.3.4) 
+*  Evalulate callback without generating image. See below for example usage.
+*  Streamlined Image Generation
 
 ## Version Update (0.3.2) 
-*  generateOneImage function added to directly convert an scs file via the command line   
+*  generateOneImage function added to directly convert an scs file via the command line.   
 Example:  
 `npx run-func app.js generateOneImage "E:/temp/microengine.scs" "E:/temp/microengine.png"`
 
 ## Version Update (0.2.8) 
-*  Updated to HOOPS Communicator 2023 U1
-
+*  Updated to HOOPS Communicator 2023 U1.
 
 ## Version Update (0.2.5) 
-*  Updated to HOOPS Communicator 2023
+*  Updated to HOOPS Communicator 2023.
 
 
 ## Version Update (0.2.4) 
-*  Updated to HOOPS Communicator 2022 SP2 U1
+*  Updated to HOOPS Communicator 2022 SP2 U1.
 
 ## Version Update (0.2.1) 
-*  Updated to HOOPS Communicator 2022 SP2
+*  Updated to HOOPS Communicator 2022 SP2.
 
 ## Version Update (0.2.0) 
-*  Callback parameter added (see callbackParam below)
-*  transparent background for generated images
-*  async support for callbacks
-*  bugfixes
-
+*  Callback parameter added (see callbackParam below).
+*  transparent background for generated images.
+*  async support for callbacks.
+*  bugfixes.
 
 ## Overview
 
@@ -41,7 +39,6 @@ https://github.com/techsoft3d/HC-ImageService
 
 ## Disclaimer
 **This library is not an officially supported part of HOOPS Communicator and provided as-is.**
-
 
 ## HOOPS Communicator Version
 
@@ -158,17 +155,19 @@ The image service expects a file called imageservice.html to be accesible in the
 
 ```
 
-var currentFrameDrawn = new Date();
 var modelStructureReady = false;
+var fullyDrawn = false;
 
-function frameDrawn() {
-    currentFrameDrawn = new Date();
+async function waitForIdle() {
+    await hwv.waitForIdle();
+    fullyDrawn = true;
 }
 
 function msready() {
-    hwv.view.setDisplayIncompleteFrames(false);
+    hwv.view.setDisplayIncompleteFrames(false)
     hwv.view.setBackfacesVisible(true);
     modelStructureReady = true;
+    waitForIdle();
 }
 
 window.onload = function () {
@@ -177,8 +176,7 @@ window.onload = function () {
 
                   
         hwv.setCallbacks({
-            frameDrawn: frameDrawn,
-            modelStructureReady: msready,
+            modelStructureReady: msready
         });
 
 ```

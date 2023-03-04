@@ -145,31 +145,35 @@ exports.start = async function (params) {
 
 async function waitUntilFullyDrawn(page, params)
 {
+    let evalOnly = params && params.evaluate;
     return new Promise((resolve, reject) => {
         let evalResult = null;
         let done = false;
         let modelStructureReadyCalled = false;
-        let interval = setInterval(async () => {
-            const lastframetime = await page.evaluate(() => {
-                return new Date() - currentFrameDrawn;
-            });
+        let interval = setInterval(async () => {            
+            let fullyDrawn = false;
+            if (!evalOnly) {
+                fullyDrawn = await page.evaluate(() => {
+                    return fullyDrawn;
+                });
+            }
             if (params && (params.callback || params.code) && modelStructureReadyCalled == false) {
                 modelStructureReadyCalled = await page.evaluate(() => {
-                    currentFrameDrawn = new Date();
                     return modelStructureReady;
                 });
                 if (modelStructureReadyCalled) {
                     if (params.code) {
                         evalResult = await page.evaluate("(async () => {" + params.code + "})()", params.callbackParam);
-
                     }
                     else {
                         evalResult = await page.evaluate(params.callback,params.callbackParam);   
                     }
+                    if (evalOnly) {
+                        fullyDrawn = true;
+                    }
                 }
-    
             }
-            if (lastframetime > 1000) {           
+            if (fullyDrawn) {           
                 if (!done) {
                     clearInterval(interval);
                     done = true;
@@ -312,93 +316,6 @@ exports.removeFromCache = async function (cacheID) {
     }
 };
 
-
-// async function myCallback(rot)
-// {
-//     let res = await hwv.model.getNodeProperties(5);
-//     let rmatrix = Communicator.Matrix.xAxisRotation(rot);
-//     await hwv.model.setNodeMatrix(hwv.model.getRootNode(), rmatrix);
-//     await hwv.view.fitWorld();
-//     return {story:res.TYPE};
-// }
-
-// (async () => {
-//     await this.start();
-// //    await this.generateImage("E:/communicator/HOOPS_Communicator_2023_U1/quick_start/converted_models/standard/scs_models/arboleda.scs", {outputPath:"./car.png",callback:myCallback,callbackParam:45,size:{width:1280,height:800}});
-//     let res = await this.generateImage("E:/communicator/HOOPS_Communicator_2023_U1/quick_start/converted_models/standard/scs_models/arboleda.scs", {outputPath:"./car.png",
-//     code:'let res = await hwv.model.getNodeProperties(5);return {story:res.TYPE};',callbackParam:45,evaluate:true});
-//     console.log(res.story);
-//     await this.shutdown();
-// })();
-
-
-// async function myCallback(rot)
-// {
-//     let rmatrix = Communicator.Matrix.xAxisRotation(rot);
-//     await hwv.model.setNodeMatrix(hwv.model.getRootNode(), rmatrix);
-//     await hwv.view.fitWorld();
-// }
-
-
-// (async () => {
-//     await this.start();
-//     this.generateImage("E:/communicator/HOOPS_Communicator_2022_SP1_U2/quick_start/converted_models/user/scs_models/railroadcar.scs", {outputPath:"./car.png",callback:myCallback,callbackParam:45,size:{width:1280,height:800}});
-// })();
-
-// function myCallback()
-// {
-//     hwv.view.setBackgroundColor(new Communicator.Color(0,0,0));
-// }
-
-
-
-// function myCallback2()
-// {
-//     hwv.view.isolateNodes([446]);
-// }
-
-// async function loadModel()
-// {
-//     await hwv.model.loadSubtreeFromScsFile(hwv.model.getRootNode(), "models/arboleda.scs");
-// }
-
-// async function loadModel2()
-// {
-//     let node =  hwv.model.createNode(hwv.model.getRootNode());
-//     await hwv.model.loadSubtreeFromScsFile(node, "models/arboleda.scs");
-//     var matrix = new Communicator.Matrix();
-//     matrix.setTranslationComponent(1000,1000,1000);
-//     await hwv.model.setNodeMatrix(node,matrix);
-//     hwv.view.fitWorld();
-// }
-
-
-// (async () => {
-//     await this.startServer();
-//     await this.start({viewerPort:3010});
-// //    this.generateImage("E:/communicator/HOOPS_Communicator_2022_SP1_U2/quick_start/converted_models/user/scs_models/DamagedHelmet.scs", {outputPath:"./damagedhelmet.png",callback:myCallback,size:{width:1280,height:800}});
-// // await this.generateImage("E:/communicator/HOOPS_Communicator_2022_SP1_U2/quick_start/converted_models/user/scs_models/wooden 3d printer (1).scs",{outputPath:"./printer1.png",callback:function() {hwv.view.setViewOrientation(Communicator.ViewOrientation.Left);},cacheID:"printer"});
-// // await this.generateImage(null,{outputPath:"./printer2.png",callback:function() {hwv.view.setViewOrientation(Communicator.ViewOrientation.Top);},cacheID:"printer"});
-// // await this.generateImage(null,{outputPath:"./printer3.png",callback:function() {hwv.view.setViewOrientation(Communicator.ViewOrientation.Front);},cacheID:"printer"});
-// //    this.generateImage("E:/communicator/HOOPS_Communicator_2022_SP1_U2/quick_start/converted_models/user/scs_models/railroadcar.scs");
-// //    this.generateImage("E:/communicator/HOOPS_Communicator_2022_SP1_U2/quick_start/converted_models/user/scs_models/aw_Dives in Misericordia_2D.scs");
-
-//  await this.generateImage(null,{outputPath:"./printer1.png",callback:loadModel,cacheID:"printer"});
-//  await this.generateImage(null,{outputPath:"./printer2.png",callback:loadModel2,cacheID:"printer"});
-
-
-
-// })();
-
-
-// (async () => {
-//     await this.start({customServer: "http://localhost:11180/imageservice.html?viewer=csr&", sczDirectory:"E:/communicator/HOOPS_Communicator_2022_SP1_U2/quick_start/converted_models/user/sc_models"});
-//     await this.generateImage("E:/temp/DamagedHelmet2.scz", {outputPath:"./damagedhelmet.png",callback:myCallback});
-//     await this.generateImage("E:/temp/wooden 3d printer2.scz",{outputPath:"./printer.png",callback:myCallback2});
-// //    this.generateImage("E:/communicator/HOOPS_Communicator_2022_SP1_U2/quick_start/converted_models/user/scs_models/railroadcar.scs");
-// //    this.generateImage("E:/communicator/HOOPS_Communicator_2022_SP1_U2/quick_start/converted_models/user/scs_models/aw_Dives in Misericordia_2D.scs");
-
-// })();
 
 
 if (require.main === module) {

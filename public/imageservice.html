@@ -42,19 +42,20 @@
       var hwv = null;
       var ui = null;
       var md = new MobileDetect(window.navigator.userAgent);
-
-
-      var currentFrameDrawn = new Date();
+      
       var modelStructureReady = false;
+      var fullyDrawn = false;
 
-      function frameDrawn() {
-        currentFrameDrawn = new Date();
+      async function waitForIdle() {
+        await hwv.waitForIdle();
+        fullyDrawn = true;
       }
 
       function msready() {
         hwv.view.setDisplayIncompleteFrames(false)
         hwv.view.setBackfacesVisible(true);
         modelStructureReady = true;
+        waitForIdle();
       }
 
 
@@ -85,8 +86,7 @@
 
                   
           hwv.setCallbacks({
-            frameDrawn: frameDrawn,
-            modelStructureReady: msready,
+            modelStructureReady: msready
           });
 
             hwv.start();
