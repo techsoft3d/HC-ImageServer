@@ -1,7 +1,7 @@
 # HC-ImageService
 
 
-## Version Update (0.3.0) 
+## Version Update (0.3.2) 
 *  generateOneImage function added to directly convert an scs file via the command line.   
 Example:  
 `npx run-func app.js generateOneImage "E:/temp/microengine.scs" "E:/temp/microengine.png"`
