@@ -13,7 +13,7 @@ const del = require('del');
 
 var puppeteer;
 var viewerPort = 4001;
-var browser;
+var browser = null;
 var customServer = null;
 var sczDirectory = null;
 var customViewerDirectory = null;
@@ -176,6 +176,7 @@ async function waitUntilFullyDrawn(page, params)
 
 exports.generateImage = async function (scspath,params) {  
 
+
     var uv4 = null;
     
     if (scspath || (params && params.scsData)) {
@@ -247,7 +248,8 @@ exports.generateImage = async function (scspath,params) {
         await page.close();
     }
     let imagedata = fs.readFileSync(path.join(__dirname, './screenshots/' + uv4 + '.png'));
-    if (params && params.outputPath) {
+    if (params && params.outputPath) {      
+
         fs.writeFileSync(params.outputPath, imagedata);
     }
     if (sczDirectory) {
@@ -261,10 +263,18 @@ exports.generateImage = async function (scspath,params) {
             del(path.join(__dirname, "./public/models/" + uv4), { force: true });
         }
     }
-    del(path.join(__dirname, './screenshots/' + uv4 + '.png'), { force: true });              
+    del(path.join(__dirname, './screenshots/' + uv4 + '.png'), { force: true });   
     return imagedata;
          
 };
+
+
+exports.generateOneImage = async function (scspath,outputpath) {
+    await this.start();
+    await this.generateImage(scspath,{outputPath:outputpath});
+    await this.shutdown();
+    process.exit(0);
+}
 
 exports.shutdown = async function () {
     await browser.close();
