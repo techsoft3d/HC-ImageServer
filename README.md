@@ -1,8 +1,11 @@
 # HC-ImageService
 
 
+## Version Update (0.3.3) 
+*  Evalulate callback without generating image. See below for example usage
+
 ## Version Update (0.3.2) 
-*  generateOneImage function added to directly convert an scs file via the command line.   
+*  generateOneImage function added to directly convert an scs file via the command line   
 Example:  
 `npx run-func app.js generateOneImage "E:/temp/microengine.scs" "E:/temp/microengine.png"`
 
@@ -95,6 +98,22 @@ let data = await imageservice.generateImage("E:/mymodels/microengine.scs",{callb
 ```
 The callback will be executed after the modelStructureReady callback in the HOOPS Web Viewer has triggered and receive the parameter defined in callbackParam.
 
+
+## Evaluating custom JS without generating an image
+```
+async function myCallback()
+{
+    let foundfloors = [];
+    //write code here that finds all floors in a building and returns the floors as an array of nodeids
+    //...
+    //...
+    return {floors:foundfloors};
+}
+
+let res = await this.generateImage(E:/mymodels/arboleda.scs", {evaluate:true,callback:myCallback,callbackParam:null});
+console.log(res.floors.length);
+```
+By setting `evaluate:true` the callback function will be executed but no image will be generated. Instead `generateImage` will return the result of the callback function. This can be used to extract information from the model prior to generating one or more images.
 
 ## Generate image data from scs file and execute custom JS from provided string
 ```

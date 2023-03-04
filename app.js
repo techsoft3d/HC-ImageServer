@@ -65,6 +65,9 @@ exports.startServer = async function () {
         del(path.join(__dirname, "/public/models",req.file.filename), { force: true });
         args.scsData = scsdata;
         let blob = await _this.generateImage(null, args);
+        if (args.evaluate) {
+            return res.json(blob);
+        }
         return res.send(Buffer.from(blob));
     });
 
@@ -76,6 +79,9 @@ exports.startServer = async function () {
             args = {};
 
         let blob = await _this.generateImage(args.scsPath, args);
+        if (args.evaluate) {
+            return res.json(blob);
+        }
         return res.send(Buffer.from(blob));
     });
 
@@ -140,6 +146,7 @@ exports.start = async function (params) {
 async function waitUntilFullyDrawn(page, params)
 {
     return new Promise((resolve, reject) => {
+        let evalResult = null;
         let done = false;
         let modelStructureReadyCalled = false;
         let interval = setInterval(async () => {
@@ -153,11 +160,11 @@ async function waitUntilFullyDrawn(page, params)
                 });
                 if (modelStructureReadyCalled) {
                     if (params.code) {
-                        await page.evaluate("(async () => {" + params.code + "})()", params.callbackParam);
+                        evalResult = await page.evaluate("(async () => {" + params.code + "})()", params.callbackParam);
 
                     }
                     else {
-                        await page.evaluate(params.callback,params.callbackParam);   
+                        evalResult = await page.evaluate(params.callback,params.callbackParam);   
                     }
                 }
     
@@ -166,7 +173,7 @@ async function waitUntilFullyDrawn(page, params)
                 if (!done) {
                     clearInterval(interval);
                     done = true;
-                    resolve();
+                    resolve(evalResult);
                 }    
             }
         }, 100);
@@ -241,17 +248,25 @@ exports.generateImage = async function (scspath,params) {
 
     }
 
-    await waitUntilFullyDrawn(page, params);
+    let evalResult = await waitUntilFullyDrawn(page, params);
 
-    await page.screenshot({ omitBackground: true,path: path.join(__dirname, './screenshots/' + uv4 + '.png') });
+    let evalOnly = params && params.evaluate;
+    let imagedata;
+
+    if (!evalOnly) {
+        await page.screenshot({ omitBackground: true, path: path.join(__dirname, './screenshots/' + uv4 + '.png') });
+        imagedata = fs.readFileSync(path.join(__dirname, './screenshots/' + uv4 + '.png'));
+        if (params && params.outputPath) {
+
+            fs.writeFileSync(params.outputPath, imagedata);
+        }
+        del(path.join(__dirname, './screenshots/' + uv4 + '.png'), { force: true });
+
+    }
     if (!params || !params.cacheID) {
         await page.close();
     }
-    let imagedata = fs.readFileSync(path.join(__dirname, './screenshots/' + uv4 + '.png'));
-    if (params && params.outputPath) {      
 
-        fs.writeFileSync(params.outputPath, imagedata);
-    }
     if (sczDirectory) {
         del(sczDirectory + "/" + uv4 + ".scz", { force: true });
     }
@@ -263,9 +278,13 @@ exports.generateImage = async function (scspath,params) {
             del(path.join(__dirname, "./public/models/" + uv4), { force: true });
         }
     }
-    del(path.join(__dirname, './screenshots/' + uv4 + '.png'), { force: true });   
-    return imagedata;
-         
+
+    if (!evalOnly) {
+        return imagedata;
+    }
+    else {
+        return evalResult;
+    }
 };
 
 
@@ -296,17 +315,20 @@ exports.removeFromCache = async function (cacheID) {
 
 // async function myCallback(rot)
 // {
+//     let res = await hwv.model.getNodeProperties(5);
 //     let rmatrix = Communicator.Matrix.xAxisRotation(rot);
 //     await hwv.model.setNodeMatrix(hwv.model.getRootNode(), rmatrix);
 //     await hwv.view.fitWorld();
+//     return {story:res.TYPE};
 // }
 
 // (async () => {
 //     await this.start();
-//     await this.generateImage("E:/communicator/HOOPS_Communicator_2022_SP1_U2/quick_start/converted_models/user/scs_models/railroadcar.scs", {outputPath:"./car.png",callback:myCallback,callbackParam:45,size:{width:1280,height:800}});
+// //    await this.generateImage("E:/communicator/HOOPS_Communicator_2023_U1/quick_start/converted_models/standard/scs_models/arboleda.scs", {outputPath:"./car.png",callback:myCallback,callbackParam:45,size:{width:1280,height:800}});
+//     let res = await this.generateImage("E:/communicator/HOOPS_Communicator_2023_U1/quick_start/converted_models/standard/scs_models/arboleda.scs", {outputPath:"./car.png",
+//     code:'let res = await hwv.model.getNodeProperties(5);return {story:res.TYPE};',callbackParam:45,evaluate:true});
+//     console.log(res.story);
 //     await this.shutdown();
-//     await this.start();
-//     await this.generateImage("E:/communicator/HOOPS_Communicator_2022_SP1_U2/quick_start/converted_models/user/scs_models/railroadcar.scs", {outputPath:"./car2.png",callback:myCallback,callbackParam:45,size:{width:1280,height:800}});
 // })();
 
 
