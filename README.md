@@ -1,6 +1,6 @@
 # HC-ImageService
 
-## Version Update (0.3.4) 
+## Version Update (0.3.5) 
 *  Evalulate callback without generating image. See below for example usage.
 *  Streamlined Image Generation
 

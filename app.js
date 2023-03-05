@@ -145,18 +145,20 @@ exports.start = async function (params) {
 
 async function waitUntilFullyDrawn(page, params)
 {
-    let evalOnly = params && params.evaluate;
+    let evaluated = true;
+    if (params && (params.callback || params.code)) {
+        evaluated = false;
+    }
+    
     return new Promise((resolve, reject) => {
         let evalResult = null;
         let done = false;
         let modelStructureReadyCalled = false;
         let interval = setInterval(async () => {            
-            let fullyDrawn = false;
-            if (!evalOnly) {
-                fullyDrawn = await page.evaluate(() => {
-                    return fullyDrawn;
-                });
-            }
+
+            let fullyDrawn = await page.evaluate(() => {
+                return fullyDrawn;
+            });
             if (params && (params.callback || params.code) && modelStructureReadyCalled == false) {
                 modelStructureReadyCalled = await page.evaluate(() => {
                     return modelStructureReady;
@@ -168,12 +170,10 @@ async function waitUntilFullyDrawn(page, params)
                     else {
                         evalResult = await page.evaluate(params.callback,params.callbackParam);   
                     }
-                    if (evalOnly) {
-                        fullyDrawn = true;
-                    }
+                    evaluated = true;
                 }
             }
-            if (fullyDrawn) {           
+            if (fullyDrawn && evaluated) {           
                 if (!done) {
                     clearInterval(interval);
                     done = true;
@@ -315,8 +315,6 @@ exports.removeFromCache = async function (cacheID) {
         delete pageCache[cacheID];
     }
 };
-
-
 
 if (require.main === module) {
     this.startServer();
