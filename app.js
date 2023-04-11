@@ -17,7 +17,7 @@ var browser = null;
 var customServer = null;
 var sczDirectory = null;
 var customViewerDirectory = null;
-
+var headless = true;
 var pageCache = [];
 
 var viewerServer = null;
@@ -109,6 +109,13 @@ exports.start = async function (params) {
         viewerPort = 4001;
     }
 
+    if (params && params.headless != undefined) {
+        headless = params.headless;
+    }    
+    else {
+        headless = true;
+    }
+
     if (params && params.customServer) {
         customServer = params.customServer;
         sczDirectory = params.sczDirectory;
@@ -137,7 +144,9 @@ exports.start = async function (params) {
     }
 
     puppeteer = require('puppeteer');
-    browser = await puppeteer.launch();
+    browser = await puppeteer.launch({
+      headless: headless,     
+    });
 
     console.log("Image Service Started");
 };
@@ -149,7 +158,10 @@ async function waitUntilFullyDrawn(page, params)
     if (params && (params.callback || params.code)) {
         evaluated = false;
     }
-    
+    await page.evaluate(() => {
+        fullyDrawn = false;
+    });
+
     return new Promise((resolve, reject) => {
         let evalResult = null;
         let done = false;
@@ -170,6 +182,9 @@ async function waitUntilFullyDrawn(page, params)
                     else {
                         evalResult = await page.evaluate(params.callback,params.callbackParam);   
                     }
+                    page.evaluate(() => {
+                        waitForIdle();
+                    });
                     evaluated = true;
                 }
             }
@@ -315,6 +330,7 @@ exports.removeFromCache = async function (cacheID) {
         delete pageCache[cacheID];
     }
 };
+
 
 if (require.main === module) {
     this.startServer();

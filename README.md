@@ -1,5 +1,11 @@
 # HC-ImageService
 
+## Version Update (0.3.6) 
+*  Ability to run puppeteer in non-headless mode for faster image generation.  
+Example:  
+` await imageservice.start({headless:false});`
+
+
 ## Version Update (0.3.5) 
 *  Evalulate callback without generating image. See below for example usage.
 *  Streamlined Image Generation
