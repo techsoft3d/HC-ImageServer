@@ -1,10 +1,15 @@
 # HC-ImageService
 
+## Version Update (0.3.9) 
+*  Ability to specify extra puppeteer command line arguments.  
+Example:  
+`await this.start({headless:true, puppeteerArgs:["--use-gl=angle"]});  //activates hardware accelleration for headless mode (Windows only)`
+
 ## Version Update (0.3.8) 
 *  Performance Improvements.
 *  Ability to run puppeteer in non-headless mode for faster image generation.  
 Example:  
-` await imageservice.start({headless:false});`
+`await imageservice.start({headless:false});`
 
 ## Version Update (0.3.5) 
 *  Evalulate callback without generating image. See below for example usage.
