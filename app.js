@@ -174,29 +174,26 @@ async function waitUntilFullyDrawn(page, params)
             let fullyDrawn = await page.evaluate(() => {
                 return fullyDrawn;
             });
-            if (params && (params.callback || params.code) && modelStructureReadyCalled == false) {
-                modelStructureReadyCalled = await page.evaluate(() => {
-                    return modelStructureReady;
-                });
-                if (modelStructureReadyCalled) {
-                    if (params.code) {
-                        evalResult = await page.evaluate("(async () => {" + params.code + "})()", params.callbackParam);
+            if (modelStructureReadyCalled == false) {
+                if (params && (params.callback || params.code)) {
+                    modelStructureReadyCalled = await page.evaluate(() => {
+                        return modelStructureReady;
+                    });
+                    if (modelStructureReadyCalled) {
+                        if (params.code) {
+                            evalResult = await page.evaluate("(async () => {" + params.code + "})()", params.callbackParam);
+                        }
+                        else {
+                            evalResult = await page.evaluate(params.callback, params.callbackParam);
+                        }
+                        fullyDrawn = true;
+                        evaluated = true;
                     }
-                    else {
-                        evalResult = await page.evaluate(params.callback,params.callbackParam);   
-                    }
-                    if (params && params.fixedDelay) {
-                        await new Promise(r => setTimeout(r, params.fixedDelay));   
-                        fullyDrawn = true;   
-                    }
-                    else {
-                        page.evaluate(() => {
-                            waitForIdle();
-                        });
-                    }
-                    evaluated = true;
                 }
-            }
+                else {
+                    fullyDrawn = true;
+                }
+            }        
             if (fullyDrawn && evaluated) {           
                 if (!done) {
                     done = true;
