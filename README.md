@@ -1,10 +1,12 @@
 # HC-ImageService
 
-## Version Update (0.3.6) 
+## Version Update (0.3.7) 
 *  Ability to run puppeteer in non-headless mode for faster image generation.  
 Example:  
 ` await imageservice.start({headless:false});`
-
+*  Ability to specify fixed "wait" time in milliseconds before generating image. Can improve image generation performance but model might not be completely rendered yet when image is generated.  
+Example:  
+`await this.generateImage("e:/temp/arboleda.scs",{callback: setView, cacheID: "test",outputPath: "./images/test.png",fixedDelay:100});`
 
 ## Version Update (0.3.5) 
 *  Evalulate callback without generating image. See below for example usage.

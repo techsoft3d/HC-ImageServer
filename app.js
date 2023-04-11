@@ -162,11 +162,14 @@ async function waitUntilFullyDrawn(page, params)
         fullyDrawn = false;
     });
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         let evalResult = null;
         let done = false;
         let modelStructureReadyCalled = false;
-        let interval = setInterval(async () => {            
+
+        while (true) {
+        
+            await new Promise(r => setTimeout(r, 100));      
 
             let fullyDrawn = await page.evaluate(() => {
                 return fullyDrawn;
@@ -182,20 +185,26 @@ async function waitUntilFullyDrawn(page, params)
                     else {
                         evalResult = await page.evaluate(params.callback,params.callbackParam);   
                     }
-                    page.evaluate(() => {
-                        waitForIdle();
-                    });
+                    if (params && params.fixedDelay) {
+                        await new Promise(r => setTimeout(r, params.fixedDelay));   
+                        fullyDrawn = true;   
+                    }
+                    else {
+                        page.evaluate(() => {
+                            waitForIdle();
+                        });
+                    }
                     evaluated = true;
                 }
             }
             if (fullyDrawn && evaluated) {           
                 if (!done) {
-                    clearInterval(interval);
                     done = true;
                     resolve(evalResult);
+                    break;
                 }    
             }
-        }, 100);
+        }
     });
 }
 
