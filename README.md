@@ -1,14 +1,12 @@
 # HC-ImageService
 
 
-## Version Update (0.4.1) 
+## Version Update (0.4.2) 
 * `fitNodes` and `fitNodesExact` functions added via [Minimal Bounding library](https://forum.techsoft3d.com/t/minimal-bounding-calculation-in-hoops-communicator/1615) to better fit model into viewport when generating image and avoid cut-off of model with certain aspect ratios.  
 Example (use in image generation callback instead of hwv.fitWorld):  
 `MinimalBounding.fitNodesExact(hwv,[hwv.model.getRootNode()]);` (slower but fits model tightly)
 or
 `MinimalBounding.fitNodes(hwv,[hwv.model.getRootNode()],{tightBounding:true, ignoreInvisible:true});`
-
-
 
 ## Version Update (0.3.9) 
 *  Ability to specify extra puppeteer command line arguments.  
