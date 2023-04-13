@@ -19,6 +19,7 @@
   <script type="text/javascript" src="js/web_viewer_ui.js?v=624b2ae" id="hwvUI"></script>
   <script type="text/javascript" src="js/communicator_server_integration.js?v=624b2ae"></script>
   <script type="text/javascript" src="js/sample.js?v=624b2ae"></script>
+  <script type="text/javascript" src="js/hcMinimalBounding.min.js"></script>
 
   <link rel="stylesheet" href="css/TreeControl.css" type="text/css" />
   <link rel="stylesheet" href="css/Toolbar.css" type="text/css" />
@@ -39,71 +40,7 @@
 
     var modelStructureReady = false;
     var fullyDrawn = false;
-
-
-    async function fitNodes(nodeids,config) {
-
-      let bounding = await hwv.model.getNodesBounding(nodeids, config);
-      const extents = bounding.extents();
-      const extentsLength = extents.length();
-      let camera = hwv.view.getCamera();
-      const height = camera.getHeight();
-      const eye = Communicator.Point3.subtract(camera.getPosition(), camera.getTarget());
-      const eyeLength = eye.length();
-      const newEyeLength = (extentsLength * eyeLength) / height;
-      const target = bounding.center();
-      const position = Communicator.Point3.add(target, eye.normalize().scale(newEyeLength));
-
-      camera.setTarget(target);
-      camera.setPosition(position);
-
-      camera.setWidth(extentsLength);
-      camera.setHeight(extentsLength);
-      let corners = bounding.getCorners();
-
-      let vw = $(hwv.getViewElement()).width();
-      let vh = $(hwv.getViewElement()).height();
-
-      zoomIn = false;
-
-      for (let j = 1; j < 200; j++) {
-        tooBig = false;
-        for (let i = 0; i < corners.length; i++) {
-          let pp = hwv.view.projectPoint(corners[i], camera);
-          if (pp.x < 0 || pp.x > vw || pp.y < 0 || pp.y > vh) {
-            tooBig = true;
-            break;
-          }
-        }
-
-        if (j == 1 && !tooBig) {
-          zoomIn = true;
-        }
-
-        if (zoomIn) {
-          if (tooBig) {
-            camera.setWidth(extentsLength / (1 + (j - 2) * 0.02));
-            camera.setHeight(extentsLength / (1 + (j - 2) * 0.02));
-            break;
-          }
-          else {
-            camera.setWidth(extentsLength / (1 + j * 0.02));
-            camera.setHeight(extentsLength / (1 + j * 0.02));
-          }
-        }
-        else {
-          if (!tooBig) {
-            break;
-          }
-          camera.setWidth(extentsLength / (1 - j * 0.02));
-          camera.setHeight(extentsLength / (1 - j * 0.02));
-        }
-      }
-      await hwv.view.setCamera(camera);
-    }
-
-
-
+    window.MinimalBounding = hcMinimalBounding.MinimalBounding;
 
     async function waitForIdle() {
       await hwv.waitForIdle();
