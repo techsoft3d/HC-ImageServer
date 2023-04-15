@@ -146,7 +146,7 @@ exports.start = async function (params) {
     puppeteer = require('puppeteer');
     browser = await puppeteer.launch({
       headless: headless,     
-      args: params.puppeteerArgs
+      args: params ? params.puppeteerArgs : undefined
     });
 
     console.log("Image Service Started");
@@ -337,8 +337,7 @@ exports.removeFromCache = async function (cacheID) {
     }
 };
 
-
-
 if (require.main === module) {
     this.startServer();
  } 
+
