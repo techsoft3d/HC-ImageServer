@@ -2,7 +2,7 @@
 
 
 ## Version Update (0.4.5) 
-* Ability to output GPU information to console:  
+* Ability to output GPU information to image:  
 `await this.generateImage(null,{ checkGL:true,outputPath: "./images/test.png"});`
 
 ## Version Update (0.4.2) 
