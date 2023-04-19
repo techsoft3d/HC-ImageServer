@@ -1,6 +1,10 @@
 # HC-ImageService
 
 
+## Version Update (0.4.5) 
+* Ability to output GPU information to console:  
+`await this.generateImage(null,{ checkGL:true,outputPath: "./images/test.png"});`
+
 ## Version Update (0.4.2) 
 * `fitNodes` and `fitNodesExact` functions added via [Minimal Bounding library](https://forum.techsoft3d.com/t/minimal-bounding-calculation-in-hoops-communicator/1615) to better fit model into viewport when generating image and avoid cut-off of model with certain aspect ratios.  
 Example (use in image generation callback instead of hwv.fitWorld):  
@@ -30,16 +34,6 @@ Example:
 
 ## Version Update (0.2.8) 
 *  Updated to HOOPS Communicator 2023 U1.
-
-## Version Update (0.2.5) 
-*  Updated to HOOPS Communicator 2023.
-
-
-## Version Update (0.2.4) 
-*  Updated to HOOPS Communicator 2022 SP2 U1.
-
-## Version Update (0.2.1) 
-*  Updated to HOOPS Communicator 2022 SP2.
 
 ## Version Update (0.2.0) 
 *  Callback parameter added (see callbackParam below).

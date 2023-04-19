@@ -251,30 +251,37 @@ exports.generateImage = async function (scspath,params) {
         }
     }
 
+    let evalResult = null;
+
     if (params && params.size) {
         await page.setViewport(params.size);
     }
 
-    if (uv4) {
-        if (customServer) {
-            await page.goto(customServer + 'model=' + uv4);
-        }
-        else {
-            await page.goto('http://localhost:' + viewerPort + '/imageservice.html?scs=models/' + uv4);
-        }
+    if (params && params.checkGL) {
+        await page.goto('chrome://gpu');
     }
-    else if (newPage)
-    {
-        if (customServer) {
-            await page.goto(customServer + 'model=' + "_empty");
+    else {
+        if (uv4) {
+            if (customServer) {
+                await page.goto(customServer + 'model=' + uv4);
+            }
+            else {
+                await page.goto('http://localhost:' + viewerPort + '/imageservice.html?scs=models/' + uv4);
+            }
         }
-        else {
-            await page.goto('http://localhost:' + viewerPort + '/imageservice.html');
-        }
+        else if (newPage) {
+            if (customServer) {
+                await page.goto(customServer + 'model=' + "_empty");
+            }
+            else {
+                await page.goto('http://localhost:' + viewerPort + '/imageservice.html');
+            }
 
+        }
+    
+
+        evalResult = await waitUntilFullyDrawn(page, params);
     }
-
-    let evalResult = await waitUntilFullyDrawn(page, params);
 
     let evalOnly = params && params.evaluate;
     let imagedata;
@@ -339,5 +346,4 @@ exports.removeFromCache = async function (cacheID) {
 
 if (require.main === module) {
     this.startServer();
- } 
-
+} 
