@@ -175,11 +175,12 @@ async function waitUntilFullyDrawn(page, params)
             let fullyDrawn = await page.evaluate(() => {
                 return fullyDrawn;
             });
+
             if (modelStructureReadyCalled == false) {
+                modelStructureReadyCalled = await page.evaluate(() => {
+                    return modelStructureReady;
+                });
                 if (params && (params.callback || params.code)) {
-                    modelStructureReadyCalled = await page.evaluate(() => {
-                        return modelStructureReady;
-                    });
                     if (modelStructureReadyCalled) {
                         if (params.code) {
                             evalResult = await page.evaluate("(async () => {" + params.code + "})()", params.callbackParam);
