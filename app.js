@@ -153,56 +153,36 @@ exports.start = async function (params) {
 };
 
 
-async function waitUntilFullyDrawn(page, params)
-{
-    let evaluated = true;
-    if (params && (params.callback || params.code)) {
-        evaluated = false;
-    }
-    await page.evaluate(() => {
-        fullyDrawn = false;
-    });
-
+async function waitUntilFullyDrawn(page, params) {
+   
     return new Promise(async (resolve, reject) => {
-        let evalResult = null;
-        let done = false;
-        let modelStructureReadyCalled = false;
-
-        while (true) {
-        
-            await new Promise(r => setTimeout(r, 100));      
-
-            let fullyDrawn = await page.evaluate(() => {
-                return fullyDrawn;
-            });
-
-            if (modelStructureReadyCalled == false) {
-                modelStructureReadyCalled = await page.evaluate(() => {
+        while (true) {           
+            if (params && (params.callback || params.code)) {
+                let modelStructureReady = await page.evaluate(() => {
                     return modelStructureReady;
                 });
-                if (params && (params.callback || params.code)) {
-                    if (modelStructureReadyCalled) {
-                        if (params.code) {
-                            evalResult = await page.evaluate("(async () => {" + params.code + "})()", params.callbackParam);
-                        }
-                        else {
-                            evalResult = await page.evaluate(params.callback, params.callbackParam);
-                        }
-                        fullyDrawn = true;
-                        evaluated = true;
+                if (modelStructureReady) {
+                    let evalResult;
+                    if (params.code) {
+                        evalResult = await page.evaluate("(async () => {" + params.code + "})()", params.callbackParam);
                     }
-                }
-                else {
-                    fullyDrawn = true;
-                }
-            }        
-            if (fullyDrawn && evaluated) {           
-                if (!done) {
-                    done = true;
+                    else {
+                        evalResult = await page.evaluate(params.callback, params.callbackParam);
+                    }
                     resolve(evalResult);
                     break;
-                }    
+                }
             }
+            else {
+                let fullyDrawn = await page.evaluate(() => {
+                    return fullyDrawn;
+                });
+                if (fullyDrawn) {
+                    resolve();
+                    break;
+                }
+            }
+            await new Promise(r => setTimeout(r, 100));
         }
     });
 }
