@@ -1,6 +1,9 @@
 # HC-ImageService
 
 
+## Version Update (0.4.7) 
+*  Updated to HOOPS Communicator 2023 SP1.
+
 ## Version Update (0.4.5) 
 * Ability to output GPU information to image:  
 `await this.generateImage(null,{ checkGL:true,outputPath: "./images/test.png"});`
@@ -32,14 +35,6 @@ Example:
 Example:  
 `npx run-func app.js generateOneImage "E:/temp/microengine.scs" "E:/temp/microengine.png"`
 
-## Version Update (0.2.8) 
-*  Updated to HOOPS Communicator 2023 U1.
-
-## Version Update (0.2.0) 
-*  Callback parameter added (see callbackParam below).
-*  transparent background for generated images.
-*  async support for callbacks.
-*  bugfixes.
 
 ## Overview
 
