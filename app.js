@@ -95,7 +95,7 @@ exports.startServer = async function () {
     app.use("/api", router);
     app.listen(config.get("hc-imageservice.apiPort"));
 
-    console.log("API Server Started");
+    console.log("Image Service API Server Started");
 
 };
 
@@ -148,8 +148,6 @@ exports.start = async function (params) {
       headless: headless,     
       args: params ? params.puppeteerArgs : undefined
     });
-
-    console.log("Image Service Started");
 };
 
 
