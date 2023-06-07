@@ -1,5 +1,7 @@
 # HC-ImageService
 
+## Version Update (0.4.9) 
+*  Updated to HOOPS Communicator 2023 SP1 U1.
 
 ## Version Update (0.4.7) 
 *  Updated to HOOPS Communicator 2023 SP1.
