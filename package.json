@@ -1,6 +1,6 @@
 {
   "name": "ts3d-hc-imageservice",
-  "version": "0.4.9",
+  "version": "0.4.11",
   "description": "",
   "main": "app.js",
   "bin": {
@@ -12,7 +12,7 @@
     "start-server": "node app.js"
   },
   "author": "Guido Hoffmann",
-  "license": "",
+  "license": "MIT",
   "devDependencies": {
     "nodemon": "^1.18.3"
   },
